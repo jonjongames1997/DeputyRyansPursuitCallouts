@@ -12,6 +12,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
         private Ped suspect;
         private Vehicle suspectVehicle;
         private Blip suspectBlip;
+        private LHandle pursuit;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -42,6 +43,10 @@ namespace DeputyRyansPursuitCallouts.Callouts
             suspect.Tasks.CruiseWithVehicle(suspectVehicle, 90f, VehicleDrivingFlags.FollowTraffic);
 
             CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit involving a stolen vehicle is in progress. The suspect is driving a Sentinel. Proceed with caution.");
+
+            pursuit = LSPD_First_Response.Mod.API.Functions.CreatePursuit();
+            LSPD_First_Response.Mod.API.Functions.AddPedToPursuit(pursuit, suspect);
+            LSPD_First_Response.Mod.API.Functions.SetPursuitIsActiveForPlayer(pursuit, true);
 
             return base.OnCalloutAccepted();
         }
