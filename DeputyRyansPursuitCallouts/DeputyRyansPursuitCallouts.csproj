@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C0540FE1-E3A0-49BF-88CC-09C096923E4A}</ProjectGuid>
+    <ProjectGuid>{AFECC424-865F-4380-9D2A-BF55FAA3C4C0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DeputyRyansPursuitCallouts</RootNamespace>
@@ -30,15 +30,33 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CalloutInterfaceAPI">
-      <HintPath>..\..\..\..\..\Downloads\CalloutInterfaceAPI.dll</HintPath>
+      <HintPath>..\..\..\Ref\CalloutInterfaceAPI.dll</HintPath>
     </Reference>
     <Reference Include="LSPD First Response">
-      <HintPath>..\..\..\..\..\Downloads\LSPD First Response.dll</HintPath>
+      <HintPath>..\..\..\Ref\LSPD First Response.dll</HintPath>
     </Reference>
     <Reference Include="RagePluginHookSDK">
-      <HintPath>..\..\..\..\..\Downloads\RagePluginHookSDK.dll</HintPath>
+      <HintPath>..\..\..\Ref\RagePluginHookSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,9 +70,12 @@
   <ItemGroup>
     <Compile Include="Callouts\ArmedRobberyGetaway.cs" />
     <Compile Include="Callouts\DrunkDriverPursuit.cs" />
+    <Compile Include="Callouts\HitAndRunPursuit.cs" />
     <Compile Include="Callouts\LargeVehiclePursuit.cs" />
     <Compile Include="Callouts\PursuitInProgress.cs" />
+    <Compile Include="Callouts\RecklessDriverPursuit.cs" />
     <Compile Include="Callouts\StolenVehiclePursuit.cs" />
+    <Compile Include="Callouts\VehicleTheftPursuit.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

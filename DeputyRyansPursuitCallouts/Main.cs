@@ -1,7 +1,7 @@
 ﻿using System;
 using LSPD_First_Response.Mod.API;
 using Rage;
-using DeputyRyansPursuitCallouts.Callouts; 
+using DeputyRyansPursuitCallouts.Callouts;
 
 namespace DeputyRyansPursuitCallouts
 {
@@ -22,6 +22,9 @@ namespace DeputyRyansPursuitCallouts
                 Functions.RegisterCallout(typeof(DrunkDriverPursuit));
                 Functions.RegisterCallout(typeof(ArmedRobberyGetaway));
                 Functions.RegisterCallout(typeof(StolenVehiclePursuit));
+                Functions.RegisterCallout(typeof(RecklessDriverPursuit));
+                Functions.RegisterCallout(typeof(VehicleTheftPursuit));
+                Functions.RegisterCallout(typeof(HitAndRunPursuit));
             }
         }
 
