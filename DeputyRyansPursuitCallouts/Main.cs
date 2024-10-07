@@ -38,7 +38,7 @@ namespace DeputyRyansPursuitCallouts
                 Game.Console.Print("=============================================== DeputyRyansPursuitCallouts by DeputyRyan32 ================================================");
                 Game.Console.Print();
 
-                VersionChecker.Version.IsUpdateAvailable();
+                VersionChecker.PluginCheck.IsUpdateAvailable();
 
                 // In-game notification log
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "DeputyRyansPursuitCallouts", "~g~Callouts Initialized", "All callouts have been successfully loaded.");
