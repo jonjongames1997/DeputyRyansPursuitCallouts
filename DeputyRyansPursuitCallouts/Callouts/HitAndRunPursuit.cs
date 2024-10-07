@@ -1,18 +1,15 @@
 ﻿using CalloutInterfaceAPI;
-using LSPD_First_Response.Mod.Callouts;
-using Rage;
-using LSPD_First_Response.Mod.API;
 
 namespace DeputyRyansPursuitCallouts.Callouts
 {
     [CalloutInterface("Hit and Run Pursuit", CalloutProbability.Medium, "A pursuit involving a hit and run suspect.", "Code 3", "LSPD")]
     public class HitAndRunPursuit : Callout
     {
-        private Vector3 spawnPoint;
-        private Ped suspect;
-        private Vehicle suspectVehicle;
-        private Blip suspectBlip;
-        private LHandle pursuit;
+        private static Vector3 spawnPoint;
+        private static Ped suspect;
+        private static readonly Vehicle suspectVehicle;
+        private static Blip suspectBlip;
+        private static LHandle pursuit;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -28,6 +25,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
             ShowCalloutAreaBlipBeforeAccepting(spawnPoint, 30f);
             AddMinimumDistanceCheck(50f, spawnPoint);
 
+            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit involving a hit and run suspect is in progress. The suspect is driving an Infernus. Proceed with caution.");
             CalloutMessage = "Hit and Run Pursuit";
             CalloutPosition = spawnPoint;
             LSPD_First_Response.Mod.API.Functions.PlayScannerAudio("CRIME_HIT_AND_RUN_01");
@@ -35,20 +33,25 @@ namespace DeputyRyansPursuitCallouts.Callouts
             return base.OnBeforeCalloutDisplayed();
         }
 
-        public override bool OnCalloutAccepted()
+        public override void OnCalloutAccepted()
         {
             suspectBlip = suspectVehicle.AttachBlip();
             suspectBlip.IsFriendly = false;
 
             suspect.Tasks.CruiseWithVehicle(suspectVehicle, 110f, VehicleDrivingFlags.Emergency);
 
-            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit involving a hit and run suspect is in progress. The suspect is driving an Infernus. Proceed with caution.");
-
             pursuit = LSPD_First_Response.Mod.API.Functions.CreatePursuit();
             LSPD_First_Response.Mod.API.Functions.AddPedToPursuit(pursuit, suspect);
             LSPD_First_Response.Mod.API.Functions.SetPursuitIsActiveForPlayer(pursuit, true);
 
             return base.OnCalloutAccepted();
+        }
+
+        public override void OnCalloutNotAccepted()
+        {
+            if (suspect) suspect.Delete();
+            if (suspectVehicle) suspectVehicle.Delete();
+            if (suspectBlip) suspectBlip.Delete();
         }
 
         public override void Process()
