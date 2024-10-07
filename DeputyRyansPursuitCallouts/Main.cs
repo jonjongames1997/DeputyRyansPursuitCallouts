@@ -61,7 +61,7 @@ namespace DeputyRyansPursuitCallouts
             if (Settings.RoadRagePursuit) { Functions.RegisterCallout(typeof(RoadRagePursuit)); }
             if (Settings.StolenPoliceVehiclePursuit) { Functions.RegisterCallout(typeof(StolenPoliceVehiclePursuit)); }
             if (Settings.StolenVehiclePursuit) { Functions.RegisterCallout(typeof(StolenVehiclePursuit)); }
-            if(Settings.VehicleTheftPursuit) { Functions.RegisterCallout(typeof(VehicleTheftPursuit)); }
+            if (Settings.VehicleTheftPursuit) { Functions.RegisterCallout(typeof(VehicleTheftPursuit)); }
             if (Settings.VehicleTheftPursuit2) { Functions.RegisterCallout(typeof(VehicleTheftPursuit2)); }
         }
 
