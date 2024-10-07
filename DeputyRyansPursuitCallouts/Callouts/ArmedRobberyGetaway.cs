@@ -1,22 +1,19 @@
 ﻿using CalloutInterfaceAPI;
-using LSPD_First_Response.Mod.Callouts;
-using Rage;
-using LSPD_First_Response.Mod.API;
 
 namespace DeputyRyansPursuitCallouts.Callouts
 {
     [CalloutInterface("Armed Robbery Getaway", CalloutProbability.High, "A getaway after an armed robbery.", "Code 3", "LSPD")]
     public class ArmedRobberyGetaway : Callout
     {
-        private Vector3 spawnPoint;
-        private Ped suspect;
-        private Vehicle suspectVehicle;
-        private Blip suspectBlip;
-        private LHandle pursuit;
+        private static Vector3 spawnPoint;
+        private static Ped suspect;
+        private static readonly Vehicle suspectVehicle;
+        private static Blip suspectBlip;
+        private static LHandle pursuit;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            spawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(500f));
+            spawnPoint = World.GetNextPositionOnStreet(MainPlayer.Position.Around(500f));
             suspectVehicle = new Vehicle("BUFFALO", spawnPoint);
 
             if (!suspectVehicle.Exists())
@@ -27,6 +24,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
             ShowCalloutAreaBlipBeforeAccepting(spawnPoint, 30f);
             AddMinimumDistanceCheck(50f, spawnPoint);
 
+            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, an armed robbery suspect is making a getaway. The suspect is considered armed and dangerous. Proceed with caution.");
             CalloutMessage = "Armed Robbery Getaway";
             CalloutPosition = spawnPoint;
             LSPD_First_Response.Mod.API.Functions.PlayScannerAudio("CRIME_ARMED_ROBBERY_01");
@@ -38,16 +36,23 @@ namespace DeputyRyansPursuitCallouts.Callouts
         {
             suspectBlip = suspectVehicle.AttachBlip();
             suspectBlip.IsFriendly = false;
+            suspect.IsPersistent = true;
+            suspect.BlockPermanentEvents = true;
 
             suspect.Tasks.CruiseWithVehicle(suspectVehicle, 90f, VehicleDrivingFlags.Emergency);
-
-            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, an armed robbery suspect is making a getaway. The suspect is considered armed and dangerous. Proceed with caution.");
 
             pursuit = LSPD_First_Response.Mod.API.Functions.CreatePursuit();
             LSPD_First_Response.Mod.API.Functions.AddPedToPursuit(pursuit, suspect);
             LSPD_First_Response.Mod.API.Functions.SetPursuitIsActiveForPlayer(pursuit, true);
 
             return base.OnCalloutAccepted();
+        }
+
+        public override void OnCalloutNotAccepted()
+        {
+            if (suspect) suspect.Delete();
+            if(suspectVehicle) suspectVehicle.Delete();
+            if(suspectBlip) suspectBlip.Delete();
         }
 
         public override void Process()
