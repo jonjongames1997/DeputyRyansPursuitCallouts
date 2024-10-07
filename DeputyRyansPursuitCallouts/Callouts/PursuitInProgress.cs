@@ -1,18 +1,15 @@
 ﻿using CalloutInterfaceAPI;
-using LSPD_First_Response.Mod.Callouts;
-using Rage;
-using LSPD_First_Response.Mod.API;
 
 namespace DeputyRyansPursuitCallouts.Callouts
 {
     [CalloutInterface("Pursuit in Progress", CalloutProbability.High, "A vehicle pursuit in progress.", "Code 3", "LSPD")]
     public class PursuitInProgress : Callout
     {
-        private Vector3 spawnPoint;
-        private Ped suspect;
-        private Vehicle suspectVehicle;
-        private Blip suspectBlip;
-        private LHandle pursuit;
+        private static Vector3 spawnPoint;
+        private static Ped suspect;
+        private static readonly Vehicle suspectVehicle;
+        private static Blip suspectBlip;
+        private static LHandle pursuit;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -27,11 +24,19 @@ namespace DeputyRyansPursuitCallouts.Callouts
             ShowCalloutAreaBlipBeforeAccepting(spawnPoint, 30f);
             AddMinimumDistanceCheck(50f, spawnPoint);
 
+            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit is in progress. The suspect is driving a super fast car. Proceed with caution.");
             CalloutMessage = "Pursuit in Progress";
             CalloutPosition = spawnPoint;
             LSPD_First_Response.Mod.API.Functions.PlayScannerAudio("WE_HAVE CRIME_PURSUIT_IN_PROGRESS");
 
             return base.OnBeforeCalloutDisplayed();
+        }
+
+        public override void OnCalloutNotAccepted()
+        {
+            if (suspect) suspect.Delete();
+            if (suspectVehicle) suspectVehicle.Delete();
+            if (suspectBlip) suspectBlip.Delete();
         }
 
         public override bool OnCalloutAccepted()
@@ -40,8 +45,6 @@ namespace DeputyRyansPursuitCallouts.Callouts
             suspectBlip.IsFriendly = false;
 
             suspect.Tasks.CruiseWithVehicle(suspectVehicle, 100f, VehicleDrivingFlags.FollowTraffic);
-
-            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit is in progress. The suspect is driving a super fast car. Proceed with caution.");
 
             pursuit = LSPD_First_Response.Mod.API.Functions.CreatePursuit();
             LSPD_First_Response.Mod.API.Functions.AddPedToPursuit(pursuit, suspect);
