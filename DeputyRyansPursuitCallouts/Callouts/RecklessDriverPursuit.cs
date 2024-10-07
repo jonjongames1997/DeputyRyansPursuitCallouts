@@ -1,18 +1,16 @@
 ﻿using CalloutInterfaceAPI;
-using LSPD_First_Response.Mod.Callouts;
-using Rage;
-using LSPD_First_Response.Mod.API;
 
 namespace DeputyRyansPursuitCallouts.Callouts
 {
     [CalloutInterface("Reckless Driver Pursuit", CalloutProbability.Medium, "A pursuit involving a reckless driver.", "Code 3", "LSPD")]
+    
     public class RecklessDriverPursuit : Callout
     {
-        private Vector3 spawnPoint;
-        private Ped suspect;
-        private Vehicle suspectVehicle;
-        private Blip suspectBlip;
-        private LHandle pursuit;
+        private static Vector3 spawnPoint;
+        private static Ped suspect;
+        private static readonly Vehicle suspectVehicle;
+        private static Blip suspectBlip;
+        private static LHandle pursuit;
 
         public override bool OnBeforeCalloutDisplayed()
         {
@@ -28,6 +26,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
             ShowCalloutAreaBlipBeforeAccepting(spawnPoint, 30f);
             AddMinimumDistanceCheck(50f, spawnPoint);
 
+            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit involving a reckless driver is in progress. The suspect is driving a Futo. Proceed with caution.");
             CalloutMessage = "Reckless Driver Pursuit";
             CalloutPosition = spawnPoint;
             LSPD_First_Response.Mod.API.Functions.PlayScannerAudio("WE_HAVE CRIME_RECKLESS_DRIVER");
@@ -42,13 +41,18 @@ namespace DeputyRyansPursuitCallouts.Callouts
 
             suspect.Tasks.CruiseWithVehicle(suspectVehicle, 90f, VehicleDrivingFlags.FollowTraffic);
 
-            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a pursuit involving a reckless driver is in progress. The suspect is driving a Futo. Proceed with caution.");
-
             pursuit = LSPD_First_Response.Mod.API.Functions.CreatePursuit();
             LSPD_First_Response.Mod.API.Functions.AddPedToPursuit(pursuit, suspect);
             LSPD_First_Response.Mod.API.Functions.SetPursuitIsActiveForPlayer(pursuit, true);
 
             return base.OnCalloutAccepted();
+        }
+
+        public override void OnCalloutNotAccepted()
+        {
+            if (suspect) suspect.Delete();
+            if (suspectBlip) suspectBlip.Delete();
+            if (suspectVehicle) suspectVehicle.Delete();
         }
 
         public override void Process()
