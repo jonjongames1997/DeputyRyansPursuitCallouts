@@ -14,7 +14,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            spawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(800f));
+            spawnPoint = World.GetNextPositionOnStreet(MainPlayer.Position.Around(800f));
             suspectVehicle = new Vehicle("HAULER", spawnPoint);
 
             if (!suspectVehicle.Exists())
