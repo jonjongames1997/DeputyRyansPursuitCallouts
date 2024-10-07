@@ -6,17 +6,18 @@ using LSPD_First_Response.Mod.API;
 namespace DeputyRyansPursuitCallouts.Callouts
 {
     [CalloutInterface("Vehicle Theft Pursuit", CalloutProbability.High, "A suspect is fleeing after stealing a vehicle.", "Code 3", "LSPD")]
+    
     public class VehicleTheftPursuit2 : Callout
     {
-        private Vector3 spawnPoint;
-        private Ped suspect;
-        private Vehicle stolenVehicle;
-        private Blip suspectBlip;
-        private LHandle pursuit;
+        private static Vector3 spawnPoint;
+        private static Ped suspect;
+        private static readonly Vehicle stolenVehicle;
+        private static Blip suspectBlip;
+        private static LHandle pursuit;
 
         public override bool OnBeforeCalloutDisplayed()
         {
-            spawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(600f));
+            spawnPoint = World.GetNextPositionOnStreet(MainPlayer.Position.Around(600f));
             stolenVehicle = new Vehicle("SULTAN", spawnPoint);
 
             if (!stolenVehicle.Exists())
@@ -27,6 +28,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
             ShowCalloutAreaBlipBeforeAccepting(spawnPoint, 35f);
             AddMinimumDistanceCheck(50f, spawnPoint);
 
+            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a suspect has stolen a vehicle and is fleeing the scene. Pursue with caution.");
             CalloutMessage = "Vehicle Theft Pursuit";
             CalloutPosition = spawnPoint;
             LSPD_First_Response.Mod.API.Functions.PlayScannerAudio("CRIME_VEHICLE_THEFT_01");
@@ -38,16 +40,22 @@ namespace DeputyRyansPursuitCallouts.Callouts
         {
             suspectBlip = stolenVehicle.AttachBlip();
             suspectBlip.IsFriendly = false;
+            suspect.IsPersistent = true;
+            suspect.BlockPermanentEvents = true;
 
             suspect.Tasks.CruiseWithVehicle(stolenVehicle, 100f, VehicleDrivingFlags.Emergency);
-
-            CalloutInterfaceAPI.Functions.SendMessage(this, "Officer, a suspect has stolen a vehicle and is fleeing the scene. Pursue with caution.");
 
             pursuit = LSPD_First_Response.Mod.API.Functions.CreatePursuit();
             LSPD_First_Response.Mod.API.Functions.AddPedToPursuit(pursuit, suspect);
             LSPD_First_Response.Mod.API.Functions.SetPursuitIsActiveForPlayer(pursuit, true);
 
             return base.OnCalloutAccepted();
+        }
+
+        public override void OnCalloutNotAccepted()
+        {
+            if (suspect) suspect.Delete();
+            if(suspectBlip) suspectBlip.Delete();
         }
 
         public override void Process()
