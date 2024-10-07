@@ -2,6 +2,7 @@
 using LSPD_First_Response.Mod.API;
 using Rage;
 using DeputyRyansPursuitCallouts.Callouts;
+using System.Configuration;
 
 namespace DeputyRyansPursuitCallouts
 {
@@ -50,18 +51,18 @@ namespace DeputyRyansPursuitCallouts
 
         private static void RegisterCallouts()
         {
-            Functions.RegisterCallout(typeof(ArmedRobberyGetaway));
-            Functions.RegisterCallout(typeof(DrunkDriverPursuit));
-            Functions.RegisterCallout(typeof(HitAndRunPursuit));
-            Functions.RegisterCallout(typeof(LargeVehiclePursuit));
-            Functions.RegisterCallout(typeof(LargeVehiclePursuit2));
-            Functions.RegisterCallout(typeof(PursuitInProgress));
-            Functions.RegisterCallout(typeof(RecklessDriverPursuit));
-            Functions.RegisterCallout(typeof(RoadRagePursuit));
-            Functions.RegisterCallout(typeof(StolenPoliceVehiclePursuit));
-            Functions.RegisterCallout(typeof(StolenVehiclePursuit));
-            Functions.RegisterCallout(typeof(VehicleTheftPursuit));
-            Functions.RegisterCallout(typeof(VehicleTheftPursuit2));
+            if (Settings.ArmedRobberyGetaway) { Functions.RegisterCallout(typeof(ArmedRobberyGetaway)); }
+            if (Settings.DrunkDriverPursuit) { Functions.RegisterCallout(typeof(DrunkDriverPursuit)); }
+            if (Settings.HitAndRunPursuit) { Functions.RegisterCallout(typeof(HitAndRunPursuit)); }
+            if (Settings.LargeVehiclePursuit) { Functions.RegisterCallout(typeof(LargeVehiclePursuit)); }
+            if (Settings.LargeVehiclePursuit2) { Functions.RegisterCallout(typeof(LargeVehiclePursuit2)); }
+            if (Settings.PursuitInProgress) { Functions.RegisterCallout(typeof(PursuitInProgress)); }
+            if (Settings.RecklessDriverPursuit) { Functions.RegisterCallout(typeof(RecklessDriverPursuit)); }
+            if (Settings.RoadRagePursuit) { Functions.RegisterCallout(typeof(RoadRagePursuit)); }
+            if (Settings.StolenPoliceVehiclePursuit) { Functions.RegisterCallout(typeof(StolenPoliceVehiclePursuit)); }
+            if (Settings.StolenVehiclePursuit) { Functions.RegisterCallout(typeof(StolenVehiclePursuit)); }
+            if(Settings.VehicleTheftPursuit) { Functions.RegisterCallout(typeof(VehicleTheftPursuit)); }
+            if (Settings.VehicleTheftPursuit2) { Functions.RegisterCallout(typeof(VehicleTheftPursuit2)); }
         }
 
         public override void Finally()
