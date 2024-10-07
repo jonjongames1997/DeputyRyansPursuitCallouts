@@ -15,7 +15,7 @@ namespace DeputyRyansPursuitCallouts.Callouts
         public override bool OnBeforeCalloutDisplayed()
         {
             // Find a road position for the spawn point
-            spawnPoint = World.GetNextPositionOnStreet(Game.LocalPlayer.Character.Position.Around(500f));
+            spawnPoint = World.GetNextPositionOnStreet(MainPlayer.Position.Around(500f));
             suspectVehicle = new Vehicle("FUTO", spawnPoint);
 
             if (!suspectVehicle.Exists())
