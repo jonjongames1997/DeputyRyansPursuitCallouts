@@ -28,7 +28,7 @@
                 return false;
             }
 
-            if (recieveData != Settings.PluginVersion)
+            if (recievedData != Settings.PluginVersion)
             {
                 Game.DisplayNotification("commonmenu", "mp_alerttriangle", "~w~DeputyRyansPursuitCallouts Warning", "~y~A new update is available!", "Current Version: ~r~" + curVersion + "~w~<br>New Version: ~y~" + recieveData + "<br>~r~Please Update to the latest build for new callouts and improvments!");
                 Game.Console.Print();
